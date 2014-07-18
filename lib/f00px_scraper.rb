@@ -6,62 +6,93 @@ require 'csv'
 module F00pxScraper
   extend self
 
-  DEFAULT_FEATURES = ['highest_rated']
-  HEADERS = %W|
-id
-first_name
-last_name
-sex
-city
-state
-country
-started_at
-affections_count
-photos_count
-favorites_count
-followers_count
-friends_count
-facebook
-twitter
-flickr
-website
-gtalk
-facebookpage
-|
+  FEATURES = %w|
+    highest_rated 
+    popular
+    editors
+    upcoming
+    fresh_today
+    fresh_yesterday
+    fresh_week
+  |
+  DEFAULT_FEATURE = FEATURES.first
 
-  
+  HEADERS = %w|
+    id
+    first_name
+    last_name
+    sex
+    city
+    state
+    country
+    started_at
+    affections_count
+    photos_count
+    favorites_count
+    followers_count
+    friends_count
+    facebook
+    twitter
+    flickr
+    website
+    gtalk
+    facebookpage
+  |
+
+  CATEGORIES = {
+    "Uncategorized"         => 0 ,          
+    "Abstract"              => 10, 
+    "Animals"               => 11, 
+    "Black and White"       => 5 , 
+    "Celebrities"           => 1 , 
+    "City and Architecture" => 9 , 
+    "Commercial"            => 15, 
+    "Concert"               => 16, 
+    "Family"                => 20, 
+    "Fashion"               => 14, 
+    "Film"                  => 2 , 
+    "Fine Art"              => 24, 
+    "Food"                  => 23, 
+    "Journalism"            => 3 , 
+    "Landscapes"            => 8 , 
+    "Macro"                 => 12, 
+    "Nature"                => 18, 
+    "Nude"                  => 4 , 
+    "People"                => 7 , 
+    "Performing Arts"       => 19, 
+    "Sport"                 => 17, 
+    "Still Life"            => 6 , 
+    "Street"                => 21, 
+    "Transportation"        => 26, 
+    "Travel"                => 13, 
+    "Underwater"            => 22, 
+    "Urban Exploration"     => 27, 
+    "Wedding"               => 25, 
+  }
 
   def to_csv(options = {})
     list = perform(options)
-    write_to_csv(list)
+    write_to_csv(list, options)
   end
 
   def perform(options = {})
-    list = {}
-    features = options[:features]
-    features.each do |feature|
-      extractor = FeatureList.new(feature, options)
-      list.merge!(extractor.perform)      
-    end
+    extractor = FeatureList.new(options[:feature], options)
+    list = extractor.perform
     p "Done. Found #{list.size} photographers"
     list
   end
 
   private
 
-  def write_to_csv(list)
-    CSV.open('output.csv', 'wb') do |csv|
+  def write_to_csv(list, options = {})
+    start_num = options[:start_page] * options[:per_page]
+    end_num = options[:end_page] * options[:per_page]
+    filename = "output/500px_#{options[:features].join("_")}_#{Time.now.to_date.to_s}_#{start_num}_#{end_num}.csv"
+    CSV.open(filename, 'wb') do |csv|
       csv << HEADERS
       list.values.each do |values|
         csv << HEADERS.map {|key| values[key.to_sym]}
       end
     end
   end
-end
-
-
-if __FILE__ == $0
-
-  key = ARGV[0]
-  F00pxScraper.to_csv(features: F00pxScraper::DEFAULT_FEATURES, consumer_key: key, max_pages: 2)
 end

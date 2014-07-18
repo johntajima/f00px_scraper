@@ -8,16 +8,18 @@ require './lib/f00px_scraper'
 class ScraperCLI < Thor
 
   desc "csv", "export list of photographers from FEATURE list to csv file"
-  option :key, required: true
-  option :features  
-  option :pages, type: :numeric
-  option :per_page, type: :numeric
+  option :key, required: true, :aliases => :k
+  option :feature, :aliases => :f, :enum => F00pxScraper::FEATURES
+  option :per_page, type: :numeric, :aliases => :l
+  option :start_page, type: :numeric, :aliases => :s
+  option :end_page, type: :numeric, :aliases => :e
   def csv()
     params = {
       consumer_key: options[:key], 
-      features: (options[:features] ? options[:features].split(",") : F00pxScraper::DEFAULT_FEATURES),
+      feature: (options[:feature] ? options[:feature].split(",") : F00pxScraper::DEFAULT_FEATURE),
       per_page: options[:per_page] || 100,
-      max_pages: options[:max_pages] || 1
+      start_page: options[:start_page] || 1,
+      end_page: options[:end_page] || 1
     }
 
     F00pxScraper.to_csv(params)

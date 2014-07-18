@@ -1,44 +1,49 @@
-require 'f00px'
 require 'json'
+require 'httparty'
 
 
 class FeatureList
 
-  MAX_PAGES = 1
+  PAGES = 1
   PER_PAGE  = 100
   CATEGORIES = []
 
-  attr_reader :feature, :max_pages, :per_page, :categories, :consumer_key, :photographers, :client
+  BASE_URL = "https://api.500px.com/v1/"
+
+  attr_reader :feature, :start_page, :end_page, :per_page, :categories, :consumer_key, :photographers, :client
 
   def initialize(feature, params = {})
-    @feature    = feature
-    @max_pages  = params[:max_pages]  || MAX_PAGES
-    @per_page   = params[:per_page]   || PER_PAGE
-    @categories = params[:categories] || CATEGORIES
-    @consumer_key = params[:consumer_key]
+    @feature       = feature
+    @start_page    = params[:start_page] || 1
+    @end_page      = params[:end_page] || 1
+    @per_page      = params[:per_page]   || PER_PAGE
+    @categories    = params[:categories] || CATEGORIES
+    @consumer_key  = params[:consumer_key]
     @photographers = {}
 
     init_client
   end
 
   def perform
-    (1..max_pages).each do |page|
+    (start_page..end_page).each do |page|
       photos = photos_from_feature_list(page: page)
       p "got #{photos.size} photos from #{feature}"
       photos.each do |photo|
         photog = lookup_photographer(photo)
         @photographers[photog[:id]] = photog
       end
+      p photographers.keys.length
+
     end
     photographers
   end
 
   def photos_from_feature_list(options = {})
-    params = options.merge(feature: feature, rpp: per_page)
+    params = options.merge(feature: feature, rpp: per_page, consumer_key: consumer_key)
     params.merge!(categories:categories) unless categories.empty?
 
-    response = client.get('photos', params)
-    if (200..299).include?(response.status)
+    response = client.get(BASE_URL + 'photos', query: params)
+    if (200..299).include?(response.code)
       photos = JSON.parse(response.body)['photos']
     else
       p "Bad response #{response.status} #{response.body}"
@@ -47,7 +52,8 @@ class FeatureList
   end
 
   def lookup_photographer(photo)
-    response = client.get('users/show', {id: photo['user_id']})
+    p "lookup #{photo['user_id']} #{photo['user']['fullname']}"
+    response = client.get(BASE_URL + 'users/show', query: {id: photo['user_id'], consumer_key: consumer_key})
     user = JSON.parse(response.body)['user']
 
     photographer = {
@@ -70,16 +76,15 @@ class FeatureList
       gtalk: user['contacts']['gtalk'].to_s.strip,
       facebookpage: user['contacts']['facebookpage'].to_s.strip,
     }
+  rescue => e
+    p "skipping... Error: #{e} "
   end
 
 
   private
 
   def init_client
-    F00px.configure do |config|
-      config.consumer_key = @consumer_key
-    end
-    @client = F00px::Client.new
+    @client = HTTParty
   end
 
 end

@@ -30,27 +30,3 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-
-headers = %W|
-id
-username
-first_name
-last_name
-sex
-city
-state
-country
-500px_affections_count
-500px_photos_count
-500px_favorites_count
-500px_followers_count
-500px_friends_count
-500px_started_at
-facebook
-twitter
-flickr
-website
-facebookpage
-gtalk
-|
