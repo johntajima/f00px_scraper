@@ -1,9 +1,11 @@
 # F00pxScraper
 
-This gem will generate a CSV file of photographers from various 500px lists (popular, editors, fresh, etc.)
+Exports a list of photographers from the various 500px photo streams (popular, editors, fresh, etc.)
 
-[future options]
-Future options will be to filter by certain categories
+You specify which feature list, starting and end pages, # of results per page (max 100) and it will use the API to grab the photos for the feature list, and lookup photographer details for that list and save them to a CSV file.
+
+[future]
+- Future options will be to filter by certain categories
 
 ## Installation
 

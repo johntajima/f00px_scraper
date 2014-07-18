@@ -86,8 +86,9 @@ module F00pxScraper
 
   def write_to_csv(list, options = {})
     start_num = options[:start_page] * options[:per_page]
-    end_num = options[:end_page] * options[:per_page]
-    filename = "output/500px_#{options[:features].join("_")}_#{Time.now.to_date.to_s}_#{start_num}_#{end_num}.csv"
+    end_num   = options[:end_page] * options[:per_page]
+    filename  = "500px_#{options[:feature]}_#{Time.now.to_date.to_s}_#{start_num}_#{end_num}.csv"
+
     CSV.open(filename, 'wb') do |csv|
       csv << HEADERS
       list.values.each do |values|
