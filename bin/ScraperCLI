@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.dirname(__FILE__)
+
+require 'thor'
+require './lib/f00px_scraper'
+
+class ScraperCLI < Thor
+
+  desc "csv", "export list of photographers from FEATURE list to csv file"
+  option :key, required: true
+  option :features  
+  option :pages, type: :numeric
+  option :per_page, type: :numeric
+  def csv()
+    params = {
+      consumer_key: options[:key], 
+      features: (options[:features] ? options[:features].split(",") : F00pxScraper::DEFAULT_FEATURES),
+      per_page: options[:per_page] || 100,
+      max_pages: options[:max_pages] || 1
+    }
+
+    F00pxScraper.to_csv(params)
+  end
+end
+
+
+ScraperCLI.start(ARGV)

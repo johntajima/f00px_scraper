@@ -31,15 +31,16 @@ facebookpage
 
   
 
-  def to_csv(features = DEFAULT_FEATURES, params = {})
-    list = perform(features, params)
+  def to_csv(options = {})
+    list = perform(options)
     write_to_csv(list)
   end
 
-  def perform(features = DEFAULT_FEATURES, params = {})
+  def perform(options = {})
     list = {}
+    features = options[:features]
     features.each do |feature|
-      extractor = FeatureList.new(feature, params)
+      extractor = FeatureList.new(feature, options)
       list.merge!(extractor.perform)      
     end
     p "Done. Found #{list.size} photographers"
@@ -62,5 +63,5 @@ end
 if __FILE__ == $0
 
   key = ARGV[0]
-  F00pxScraper.to_csv(F00pxScraper::DEFAULT_FEATURES, consumer_key: key, max_pages: 10)
+  F00pxScraper.to_csv(features: F00pxScraper::DEFAULT_FEATURES, consumer_key: key, max_pages: 2)
 end
