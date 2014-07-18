@@ -23,7 +23,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+$ ./bin/500px_scraper_cli
+Commands:
+  500px_scraper_cli csv k, --key=KEY  # export list of photographers from FEATURE list to csv file
+  500px_scraper_cli help [COMMAND]    # Describe available commands or one specific command
+
+$ 500px_scraper_cli --key=<YOUR CONSUMER KEY> 
+  This will extract the top 20 photographers from the popular list
 
 ## Contributing
 
