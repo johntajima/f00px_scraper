@@ -31,6 +31,13 @@ Commands:
 $ 500px_scraper_cli --key=<YOUR CONSUMER KEY> 
   This will extract the top 20 photographers from the popular list
 
+
+  to follow users
+  > cat filename.txt | xargs t follow 
+ 
+  to add to list
+  > cat filename.txt | xargs t list add <listname>
+
 ## Contributing
 
 1. Fork it

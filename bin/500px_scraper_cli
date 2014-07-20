@@ -3,6 +3,7 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'thor'
+require 'csv'
 require './lib/f00px_scraper'
 
 class ScraperCLI < Thor
@@ -23,6 +24,38 @@ class ScraperCLI < Thor
     }
 
     F00pxScraper.to_csv(params)
+  end
+
+
+  desc "twitter FILENAME.csv", "export twitter handles from a CSV file"
+  def twitter(file)
+    list = extract_twitter_from_csv(file)
+    output = File.basename(file, ".*")
+    File.open("#{output}.txt", 'wb') do |f|
+      f.write list.join("\n")
+    end
+  end
+
+  desc "new_twitter FILENAME.csv", "export list of new twitter handles that are not followed"
+  def new_twitter(file)
+    list = extract_twitter_from_csv(file)
+    existing = `t followings`.split
+    new_list = list - existing
+
+    output = File.basename(file, ".*")
+    File.open("#{output}_new.txt", 'wb') do |f|
+      f.write new_list.join("\n")
+    end
+  end
+
+  private
+
+  def extract_twitter_from_csv(file)
+    list = []
+    CSV.foreach(file, :headers => true) do |row|
+      list << row['twitter']
+    end
+    list.uniq.reject {|x| x.length == 0 }
   end
 end
 
