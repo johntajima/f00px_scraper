@@ -76,7 +76,7 @@ module F00pxScraper
   end
 
   def perform(options = {})
-    extractor = FeatureList.new(options[:feature], options)
+    extractor = F00pxScraper::FeatureList.new(options[:feature], options)
     list = extractor.perform
     p "Done. Found #{list.size} photographers"
     list
