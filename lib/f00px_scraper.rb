@@ -1,6 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 require "f00px_scraper/version"
-require "feature_list"
+require "f00px_scraper/feature_list"
 require 'csv'
 
 module F00pxScraper
