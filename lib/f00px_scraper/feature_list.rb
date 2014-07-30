@@ -58,6 +58,7 @@ module F00pxScraper
 
       photographer = {
         id: user['id'],
+        username: user['username'].to_s.strip,
         first_name: user['firstname'].to_s.strip,
         last_name: user['lastname'].to_s.strip,
         sex: user['sex'] == 1 ? 'm' : 'f',
