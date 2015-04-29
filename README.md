@@ -22,7 +22,6 @@ Or install it yourself as:
     $ gem install f00px_scraper
 
 ## Usage
-
 ```
 $ ./bin/500px_scraper_cli
 Commands:
@@ -38,6 +37,7 @@ $ 500px_scraper_cli --key=<YOUR CONSUMER KEY>
  
   to add to list
   > cat filename.txt | xargs t list add <listname>
+```
 
 ## Contributing
 
