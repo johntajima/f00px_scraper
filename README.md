@@ -23,6 +23,7 @@ Or install it yourself as:
 
 ## Usage
 
+```
 $ ./bin/500px_scraper_cli
 Commands:
   500px_scraper_cli csv k, --key=KEY  # export list of photographers from FEATURE list to csv file

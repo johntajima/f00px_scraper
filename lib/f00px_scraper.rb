@@ -75,6 +75,14 @@ module F00pxScraper
     write_to_csv(list, options)
   end
 
+  def extract_field(field:, options: {})
+    extractor = F00pxScraper::FeatureList.new(options[:feature], options)
+    list = extractor.perform
+    list.values.map do |entry|
+      entry[field]
+    end.reject(&:empty?).sort
+  end
+
   def perform(options = {})
     extractor = F00pxScraper::FeatureList.new(options[:feature], options)
     list = extractor.perform
